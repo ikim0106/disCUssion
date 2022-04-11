@@ -34,6 +34,20 @@ serber.use('/api/users', userRouter)
 serber.use('/api/discuss', chatRouter)
 serber.use('/api/messages', msgRouter)
 
+//-------------------------DEPLOY-----------------------
+const __dirname1 = path.resolve()
+const pubPath = path.join(__dirname1, '/frontend/build')
+console.log(pubPath)
+
+if(config.NODE_ENV==='PRODUCTION') {
+   serber.use(express.static(pubPath))
+
+   serber.get('*', (req, res) => {
+      res.sendFile(path.resolve(pubPath, 'frontend', 'build', 'index.html'))
+   })
+}
+
+//-------------------------DEPLOY-----------------------
 
 serber.use(errorHandler)
 serber.use(infamous404)
