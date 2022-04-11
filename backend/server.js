@@ -23,6 +23,7 @@ const userRouter = require('./routes/userRouter')
 const chatRouter = require('./routes/chatRouter')
 const msgRouter = require('./routes/messageRouter')
 const socket = require('socket.io')
+const path = require('path')
 
 const serber = express() //no I didn't misspell server
 serber.use(express.json()) //let express use JSON formatted data
@@ -33,9 +34,26 @@ serber.use('/api/users', userRouter)
 serber.use('/api/discuss', chatRouter)
 serber.use('/api/messages', msgRouter)
 
+//-------------------------DEPLOY-----------------------
+
 serber.use(errorHandler)
 serber.use(infamous404)
 
+const __dirname1 = path.resolve()
+if(config.NODE_ENV==='PRODUCTION') {
+   serber.use(express.static(path.join(__dirname1, '/frontend/build')))
+   console.log('walao')
+   serber.get('*',(req, res) => {
+      res.sendFile(path.resolve(__dirname1, 'frontend', 'build', 'index.html'))
+   })
+} 
+else {
+   serber.get('/', (req,res)=>{
+      res.send('cb knn')
+   })
+}
+
+//-------------------------DEPLOY-----------------------
 
 const server = serber.listen(PORT, console.log(`backend started, listening on port ${PORT}`))
 
