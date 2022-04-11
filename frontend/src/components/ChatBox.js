@@ -85,13 +85,14 @@ const ChatBox = () => {
 
   React.useEffect(()=> {
     socket.on('gotMessage', (newMessage)=> {
-      console.log('temp', temp._id)
+      // console.log('temp', temp._id)
       console.log('newMessage', newMessage.send_in[0]._id)
       if(!temp || temp._id !==newMessage.send_in[0]._id)
         console.log('placeholder')
       else {
         setMessages([...messages, newMessage])
       }
+      getChat()
     })
   })
 
@@ -266,7 +267,7 @@ const ChatBox = () => {
     pad='small'
    >
      <Box justify='end'>
-     <ScrollableFeed>
+     <ScrollableFeed forceScroll={true}>
      <Box direction='column' margin='small'>
        {selectedChat && !selectedChat.is_group && (messages?.map((item, i)=>
        (
