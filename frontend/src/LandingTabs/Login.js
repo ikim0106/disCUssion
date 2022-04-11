@@ -38,8 +38,8 @@ const Login = () => {
     await axios
     .post('/api/users/login', {email, pw}, postConfig)
     .then(res => {
-      console.log('pog logged in', res) //debug
-      console.log('cmon man', res.data)
+      // console.log('pog logged in', res) //debug
+      // console.log('cmon man', res.data)
       pepelaf=res.data
       if(!pepelaf) {
         setWrong(true)
@@ -51,7 +51,7 @@ const Login = () => {
       }
     })
     .catch(error => {
-      console.log('error on login', error)
+      // console.log('error on login', error)
       setWrong(true)
       return
     })
@@ -60,7 +60,7 @@ const Login = () => {
       return
     }
     localStorage.setItem('userJSON', JSON.stringify(pepelaf))
-    console.log('pepelaf', pepelaf)
+    // console.log('pepelaf', pepelaf)
     history.push('/discuss')
     // localStorage.setItem('userJSON', JSON.stringify(loginJSON))
   }

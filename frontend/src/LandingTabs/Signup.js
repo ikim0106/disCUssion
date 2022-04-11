@@ -72,12 +72,12 @@ const Signup = () => {
          }
        }
        let rando = bruh[0].toString()
-       console.log('rando', rando)
-       console.log('bruh', bruh)
-       console.log('data', {
-         email,
-         rando
-       })
+      //  console.log('rando', rando)
+      //  console.log('bruh', bruh)
+      //  console.log('data', {
+      //    email,
+      //    rando
+      //  })
        await axios.post('/api/users/verificationEmail', {
          email,
          rando
@@ -91,7 +91,7 @@ const Signup = () => {
    }
 
    const checkCode = async () => {
-      console.log(code, randomNum)
+      // console.log(code, randomNum)
       if(!code || !randomNum) {
         setVerified(false)
         setCorrect(true)
@@ -129,13 +129,13 @@ const Signup = () => {
     await axios
     .post('/api/users/signup', {displayName, is_admin, email, pw, verified, avatar}, postConfig)
     .then(res => {
-      console.log('pog new user', res) //debug
-      console.log('cmon man', res.data)
+      // console.log('pog new user', res) //debug
+      // console.log('cmon man', res.data)
       localStorage.setItem('userJSON', JSON.stringify(res.data))
       history.push('/discuss')
     })
     .catch(error => {
-      console.log('error on signup', error)
+      // console.log('error on signup', error)
       setExists(true)
       return
     })
@@ -148,12 +148,12 @@ const Signup = () => {
       imgData.append('file', avatar)
       imgData.append('upload_preset', 'disCUssion')
       imgData.append('cloud_name', 'discussion')
-      console.log('imgData', imgData)
+      // console.log('imgData', imgData)
       let cloudinaryParams = {
         method:'post',
         body: imgData
       }
-      console.log('cloudinaryURL', cloudinary)
+      // console.log('cloudinaryURL', cloudinary)
       fetch(cloudinary, cloudinaryParams)
         .then((response)=> response.json())
         .then(data => {

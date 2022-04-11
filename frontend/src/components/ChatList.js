@@ -1,5 +1,5 @@
 import React from 'react'
-import {InfiniteScroll, Spinner, Box, Avatar, Button, Accordion, AccordionPanel, Layer, Text, TextInput, Notification, Tip} from 'grommet'
+import {InfiniteScroll, Box, Avatar, Button, Accordion, AccordionPanel, Layer, Text, TextInput, Notification, Tip} from 'grommet'
 import { Add, Search, Edit, Close} from 'grommet-icons'
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
@@ -21,7 +21,7 @@ const TipContent = ({ message }) => (
 )
 
 const ChatList = () => {
-   const {loggedinUser, setLoggedinUser, selectedChat, allChats, setAllChats, setSelectedChat} = Chat()
+   const {loggedinUser, setLoggedinUser, allChats, setAllChats, setSelectedChat} = Chat()
    const history = useHistory()
    const [noSearch, setNoSearch] = React.useState(false)
    const [searchContent, setSearchContent] = React.useState('')
@@ -56,16 +56,16 @@ const ChatList = () => {
          setmMemberToast(true)
          return
       }
-      console.log('tags', tags)
+      // console.log('tags', tags)
       let stuff = JSON.stringify(tags.map((user)=>user._id))
       const {data} = await axios.post('/api/discuss/makeGroup', {
          name: groupName,
          loggedinUser: loggedinUser,
          users: stuff
       }, reqConfig)
-      console.log('returnData', data)
+      // console.log('returnData', data)
       if(!data) {
-         console.log('error creating group chat')
+         // console.log('error creating group chat')
          throw Error('error creating group chat')
       }
       setAllChats([data, ...allChats])
@@ -77,21 +77,21 @@ const ChatList = () => {
       if(!tags)
          return
       setTags(tags.filter((elem) => elem._id !== user._id))
-      console.log('remove user', user)
+      // console.log('remove user', user)
    }
 
    const addMember = async(user)=> {
       if(tags.includes(user)){
          setTagToast(true)
-         console.log(tags)
+         // console.log(tags)
          return
       }
       setTags([...tags, user])
-      console.log(tags)
+      // console.log(tags)
    }
    
    const handleClick = async(chat) => {
-      console.log('clicked chat', chat)
+      // console.log('clicked chat', chat)
       setSelectedChat(chat)
    }
 
@@ -118,7 +118,7 @@ const ChatList = () => {
          throw Error ('error fetching chats')
       }
       else {
-         console.log('all chats', data)
+         // console.log('all chats', data)
          setAllChats(data)
       }
    }
@@ -131,7 +131,7 @@ const ChatList = () => {
    
 
    const clickedUser = async(otherUserId) => {
-      console.log('clicked user', otherUserId)
+      // console.log('clicked user', otherUserId)
       setSearchLabel(false)
       let reqConfig = {
          headers: {
@@ -142,7 +142,7 @@ const ChatList = () => {
       const {data} = await axios.post('/api/discuss', {otherUserId}, reqConfig)
       // if(!allChats.find((e) => e._id===data._id)) setAllChats([data, ...allChats])
       if(!data) {
-         console.log('err lmao')
+         // console.log('err lmao')
          throw Error('error fetching chat')
       }
       // setChat(data)
@@ -162,18 +162,18 @@ const ChatList = () => {
             Authorization: `userid ${userJSON._id}`,
          }
       }
-      console.log('wtf', reqConfig.headers.Authorization)
+      // console.log('wtf', reqConfig.headers.Authorization)
 
       const {data} = await axios.get(`/api/users?search=${searchContent}`, reqConfig)
       if(!data) {
          throw Error('something went wrong')
       }
-      console.log('search', data)
+      // console.log('search', data)
       setSearchResult(data)
    }
 
    const logout = async() => {
-      console.log('logout')
+      // console.log('logout')
       localStorage.removeItem('userJSON')
       history.push('/')
    }

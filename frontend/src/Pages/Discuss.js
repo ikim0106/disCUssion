@@ -14,7 +14,7 @@ const Discuss = () => {
       return null
    }
    userJSON = JSON.parse(userJSON)
-   console.log('jibai knn', userJSON)
+   // console.log('jibai knn', userJSON)
    return (
    <div style={{width: '100%'}}>
       <Box

@@ -29,7 +29,7 @@ const endpoint = 'http://localhost:1004'
 let socket, temp
 
 const ChatBox = () => {
-  const {loggedinUser, setLoggedinUser, selectedChat, allChats, setAllChats, setSelectedChat} = Chat()
+  const {loggedinUser, setLoggedinUser, selectedChat, setAllChats, setSelectedChat} = Chat()
   const [showProfile, setShowProfile] = React.useState(false)
   const [showGroup, setShowGroup] = React.useState(false)
   const [searchContent, setSearchContent] = React.useState('')
@@ -41,7 +41,7 @@ const ChatBox = () => {
 
   const getURL = async(msg) => {
     let url = msg.match(/\bhttps?:\/\/\S+/gi)
-    console.log('url', url[0])
+    // console.log('url', url[0])
     return url[0]
   }
 
@@ -52,12 +52,12 @@ const ChatBox = () => {
          }
       }
       const {data} = await axios.get('/api/discuss', reqConfig)
-      let type = typeof data
+      // let type = typeof data
       if(!data) {
          throw Error ('error fetching chats')
       }
       else {
-         console.log(`all chats ${type}`, data)
+        //  console.log(`all chats ${type}`, data)
          setAllChats(data)
       }
    }
@@ -79,7 +79,7 @@ const ChatBox = () => {
     if(!data) {
       throw Error('fetching history failed')
     }
-    console.log('fetched history', data)
+    // console.log('fetched history', data)
     setMessages(data)
     socket.emit('connectChat', selectedChat._id)
   }
@@ -92,7 +92,7 @@ const ChatBox = () => {
   React.useEffect(()=> {
     socket.on('gotMessage', (newMessage)=> {
       // console.log('temp', temp._id)
-      console.log('newMessage', newMessage.send_in[0]._id)
+      // console.log('newMessage', newMessage.send_in[0]._id)
       if(!temp || temp._id !==newMessage.send_in[0]._id)
         console.log('placeholder')
       else {
@@ -103,7 +103,7 @@ const ChatBox = () => {
 
   React.useEffect(()=> {
     const interval = setInterval(()=> {
-      console.log('update time')
+      // console.log('update time')
       getChat()
     }, tenSecond)
     return ()=> clearInterval(interval)
@@ -132,7 +132,7 @@ const ChatBox = () => {
     if(!data) {
       throw Error('sending message failed')
     }
-    console.log('monkas2', data)
+    // console.log('monkas2', data)
     // return
     socket.emit('sendMessage', data)
     setMessages([...messages, data])
@@ -153,12 +153,12 @@ const ChatBox = () => {
     if(!data) {
       throw Error('something went wrong')
     }
-    console.log('data', data)
+    // console.log('data', data)
     setSearchResult(data)
   }
 
   const addMember = async(user) => {
-    console.log(user, selectedChat.users.length)
+    // console.log(user, selectedChat.users.length)
     let toAddGroupID = selectedChat._id
     let toAddUserID = user._id
     let temp = selectedChat.users
@@ -181,7 +181,7 @@ const ChatBox = () => {
       const {data} = await axios.post('/api/discuss/addToGroup', {toAddGroupID, toAddUserID}, reqConfig)
       if(!data)
         throw Error('error adding member to group')
-      console.log('add group', data)
+      // console.log('add group', data)
       // window.location.reload(false)
       setSelectedChat(data)
       return
@@ -205,7 +205,7 @@ const ChatBox = () => {
   }
 
   const removeFromGroup = async(broh) => {
-    console.log('broh', broh)
+    // console.log('broh', broh)
     let toRemoveGroupID = selectedChat._id
     let toRemoveUserID = broh._id
 
@@ -218,7 +218,7 @@ const ChatBox = () => {
     if(!data) {
       throw Error('error removing user from group')
     }
-    console.log('remove group', data)
+    // console.log('remove group', data)
     setSelectedChat(data)
     return
   }
