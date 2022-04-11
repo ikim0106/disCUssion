@@ -5,11 +5,10 @@ references
 3. https://mongoosejs.com/docs/guide.html
 
 Reference 1 and 3 was used as learning material.
-The Discord-style embed logic and styling was referenced and partially copied from 2.
 
-This is a model to illustrate every messasge sent by users. If it contains a link,
-an embed will be displayed right below it, similar to a Discord embed; hence the 
-contains_link parameter. Otherwise, it will just display plain text.
+This is a model to illustrate every messasge sent by users. 
+sIf it contains a link, an embed will be displayed right below it, similar to a Discord embed; hence the contains_link parameter. 
+Otherwise, it will just display plain text.
 */
 
 let mongoose = require('mongoose')

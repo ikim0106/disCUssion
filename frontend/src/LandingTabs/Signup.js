@@ -10,6 +10,8 @@ Resources
 Resources 1, 3, 4, and 6 were used as learning material
 Some code from the postAvatar function was copied from resource 2 and modified to fit the project
 The structure of the axios post call in the handleSignup function was partially copied from resource 5
+This file handles the sign in interface of the landing pages. It is rendered when "Log in" is clicked.
+Once a user is successfully signed in, the user data is written into the database and redirects the user to the live chatting interface.
 */
 
 import React from 'react'

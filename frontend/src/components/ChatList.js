@@ -29,7 +29,6 @@ const ChatList = () => {
    const [showProfile, setShowProfile] = React.useState(false)
    const [newPw, setNewPw] = React.useState('')
    const [newPwToast, setNewPwToast] = React.useState(false)
-   const [loading, setLoading] = React.useState(false)
    const [groupLayer, setGroupLayer] = React.useState(false)
    const [searchResult, setSearchResult] = React.useState([])
    const [groupName, setGroupName] = React.useState('')
@@ -46,7 +45,7 @@ const ChatList = () => {
    const createGroup = async()=> {
       let reqConfig = {
          headers: {
-            Authorization: `Bearer ${userJSON._id}`,
+            Authorization: `userid ${userJSON._id}`,
          }
       }
       if(!groupName){
@@ -71,9 +70,12 @@ const ChatList = () => {
       }
       setAllChats([data, ...allChats])
       setGroupLayer(false)
+      getChat()
    }
 
    const removeMember = async(user)=> {
+      if(!tags)
+         return
       setTags(tags.filter((elem) => elem._id !== user._id))
       console.log('remove user', user)
    }
@@ -108,36 +110,39 @@ const ChatList = () => {
    const getChat = async() => {
       let reqConfig = {
          headers: {
-            Authorization: `Bearer ${userJSON._id}`,
+            Authorization: `userid ${userJSON._id}`,
          }
       }
       const {data} = await axios.get('/api/discuss', reqConfig)
-
-      console.log('all chats', data)
-      setAllChats(data)
+      if(!data) {
+         throw Error ('error fetching chats')
+      }
+      else {
+         console.log('all chats', data)
+         setAllChats(data)
+      }
    }
 
    React.useEffect(() => {
-      setLoggedinUser(JSON.parse(localStorage.getItem('userJSON')))
+      let temp = JSON.parse(localStorage.getItem('userJSON'))
+      setLoggedinUser(temp)
       getChat()
    }, [])
    
 
    const clickedUser = async(otherUserId) => {
-      setLoading(true)
       console.log('clicked user', otherUserId)
       setSearchLabel(false)
       let reqConfig = {
          headers: {
             "Content-type": "application/json",
-            Authorization: `Bearer ${userJSON._id}`,
+            Authorization: `userid ${userJSON._id}`,
          }
       }
       const {data} = await axios.post('/api/discuss', {otherUserId}, reqConfig)
       // if(!allChats.find((e) => e._id===data._id)) setAllChats([data, ...allChats])
       if(!data) {
          console.log('err lmao')
-         setLoading(false)
          throw Error('error fetching chat')
       }
       // setChat(data)
@@ -145,31 +150,26 @@ const ChatList = () => {
       // console.log('returned chat', data)
       setSelectedChat(data[0] || data)
       getChat()
-      setLoading(false)
    }
 
    const searchUsers = async() => {
-      setLoading(true)
       if(!searchContent) {
          setNoSearch(true)
-         setLoading(false)
          return
       }
       let reqConfig = {
          headers: {
-            Authorization: `Bearer ${userJSON._id}`,
+            Authorization: `userid ${userJSON._id}`,
          }
       }
       console.log('wtf', reqConfig.headers.Authorization)
 
       const {data} = await axios.get(`/api/users?search=${searchContent}`, reqConfig)
       if(!data) {
-         setLoading(false)
          throw Error('something went wrong')
       }
       console.log('search', data)
       setSearchResult(data)
-      setLoading(false)
    }
 
    const logout = async() => {
@@ -390,7 +390,7 @@ const ChatList = () => {
                   </Box>
                ))}
                </Box>
-                  {!loading && (
+                  {(
                      searchResult?.map(user=> (
                         <Box 
                            direction='row'
@@ -443,7 +443,7 @@ const ChatList = () => {
                      />
 
                   </Box>
-                  {!loading && (
+                  {(
                      searchResult?.map(user=> (
                         <Box 
                            direction='row'
@@ -486,15 +486,6 @@ const ChatList = () => {
           title="Please provide something to search"
           onClose={() => setNoSearch(false)}
         />
-      )}
-
-      {loading && (
-         <Layer>
-            <Box background={{color: 'white', opacity:'0.7'}} 
-            width='20vh' height='20vh' align='center' alignContent='center' pad='large'>
-               <Spinner size='xlarge'/>
-            </Box>
-         </Layer>
       )}
 
       {groupToast && (

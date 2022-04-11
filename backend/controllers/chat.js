@@ -6,7 +6,16 @@ References:
 4. https://love2dev.com/blog/javascript-remove-from-array/
 5. https://stackoverflow.com/questions/5767325/how-can-i-remove-a-specific-item-from-an-array
 
-Bits of code have been copied from these resources and modified to fit our project
+All of these resources were used as learning or reference material.
+No code was directly copied from these resources, but some of the code (i.e. axios request formats) may look very similar.
+
+Notes on functions:
+asyncHandler was employed to handle async functions the express server.
+discuss function creates a new private message if it doesn't exist already, and if it does exist it opens the chat corresponding to that user.
+makeGroup creates a new group from the selected users and exits the function if 1 or less users have been selected. Then it opens the new group chat.
+renameGroup renames the group chat, but it was not included in the page due to a major glitch in the database associated with it.
+addToGroup adds a user to the group and updates the database accordingly.
+removeFromGroup removes a user from the group and updates the database accordingly.
 */
 
 const asyncHandler = require('express-async-handler')
@@ -121,32 +130,6 @@ const makeGroup = asyncHandler(async(req, res) => {
    
    res.status(200)
    res.send(removedPasswords)
-})
-
-const getAllChatrooms = asyncHandler(async(req, res) => {
-   let currentUserID = req.loggedInUser._id
-   let currentUser = await chatSchema.find({users: {$elemMatch: {$eq: currentUserID}}})
-      .populate('users', '-pw')
-      .populate('manager', '-pw')
-      .populate('last_message')
-      .sort({updatedAt: -1}) //sort from new to old PMs
-   currentUser = await userSchema.populate(currentUser,  {
-      path: "last_message.sender",
-      select: "displayName email avatar is_admin"
-   })
-   if(currentUser!=undefined && currentUser.length>0) {
-      // console.log('currentuser', currentUser)
-      res.status(200)
-      res.send(currentUser)
-   }
-   else {
-      // console.log('invalid userID')
-      res.status(400)
-      res.send('invalid userID')
-      throw Error('invalid userID')
-   }
-   // const currentUser = chatSchema.find({})
-   // console.log('currensUserID', bruh.loggedInUser)
 })
 
 const renameGroup = asyncHandler(async(req, res) => {
@@ -298,7 +281,7 @@ const removeFromGroup = asyncHandler(async(req,res) => {
 
 module.exports = { 
    discuss, 
-   getAllChatrooms, 
+   // getAllChatrooms, 
    makeGroup, 
    renameGroup, 
    addToGroup, 

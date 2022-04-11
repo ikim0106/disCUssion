@@ -12,6 +12,15 @@ References:
 10. https://stackoverflow.com/questions/7878557/cant-find-documents-searching-by-objectid-using-mongoose
 11. https://stackoverflow.com/questions/12096262/how-to-protect-the-password-field-in-mongoose-mongodb-so-it-wont-return-in-a-qu
 
+Notes on functions:
+sendVerificationCode sends the verification email to the user
+sendEmailAdmin sends an email with the admin database interface credentials so they can access the database
+searchUser searches the database with a given user ID, some code was copied from reference 10 and heavily modified to fit the project
+There is a massive commented block in the middle of this file, it is for the past mailing service we used. We struggled so much trying to get it to work before giving up, so the code was left in comments as a reminder of the pain
+loginAdmin is a placeholder function that we previously used to handle admin login, it is handled in the frontend now.
+loginUser handles the logging in for a user.
+signupUser handles the signing up for a user.
+changePassword handles changing password from the user profile.
 */
 const userSchema = require('../databaseSchema/userSchema')
 const asyncHandler = require('express-async-handler')
@@ -99,6 +108,12 @@ const searchUser = asyncHandler(async (req, res) => {
       }
    })
    // console.log('searchedUsers', searchedUsers)
+
+   if(!searchedUsers) {
+      res.status(400)
+      return res
+   }
+   res.status(201)
    res.send(searchedUsers)
 })
 
@@ -143,7 +158,7 @@ const loginUser = asyncHandler(async(req, res) => {
    // console.log(login)
    if(!login) {
       res.status(401)
-      res.send('wrong details mfer')
+      res.send('invalid details')
       return res
    }
    else { //correct info has been entered
@@ -155,12 +170,15 @@ const loginUser = asyncHandler(async(req, res) => {
          displayName: login.displayName,
          is_admin: login.is_admin,
       }
-      if(await login.checkPw(pw)){
+      let isPasswordRight = await login.checkPw(pw)
+      if(isPasswordRight){
+         res.status(200)
          res.json(userJSON)
+         return res
       }
       else {
          res.status(401)
-         throw Error('wrong password')
+         throw Error('wrong password or email')
       }
    }
 })
@@ -169,17 +187,16 @@ const signupUser = asyncHandler(async (req, res) => {
    // console.log(req)
    let {displayName, email, pw, verified, avatar} = req.body
    let is_admin = false
-   //all required except avatar, but it defaults to some random avatar I found online
+   //all required, is_admin defaults to false.
 
-   if (!email || !pw || !displayName) {
+   if (!email || !pw || !displayName || !avatar) {
       //check if user entered all the required fields
       res.status(400)
       throw Error('some fields empty') //return? already sent error messages
    }
    if(!verified) {
-      //
       res.status(400)
-      throw Error('user is not email verified')
+      throw Error('user is not email verified') //don't really need to handle this, did it anyway
    }
 
    let search = await userSchema.findOne({email}) //only email is unique to each user, no need to check other variables
@@ -197,7 +214,9 @@ const signupUser = asyncHandler(async (req, res) => {
          verified: newUser.verified,
          avatar: newUser.avatar,
       }
-      res.status(201).json(newUserJSON)
+      res.status(201)
+      res.json(newUserJSON)
+      return res
    }
 })
 

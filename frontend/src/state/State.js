@@ -4,6 +4,10 @@ References:
 2. https://reactjs.org/docs/context.html
 3. https://frontarm.com/james-k-nelson/usecontext-react-hook/
 4. https://blog.logrocket.com/using-localstorage-react-hooks/
+
+Resources 1, 3, 4 were used as learning material
+The template for ChatState was directly copied from resource 2 and modified to fit the project.
+This file creates a provider (link) for the whole chat interface, and it lets ChatBox and ChatList exchange data between each other (i.e. all the chats that a user is a part of)
 */
 
 import React from 'react'

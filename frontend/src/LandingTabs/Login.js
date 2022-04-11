@@ -1,3 +1,10 @@
+/*
+No specific references were used to complete this file.
+This file handles the log in interface of the landing pages. It is shown when "Log in" is clicked.
+If an admin logs in, a new window will pop up with the admin interface for mongoDB, where they may edit anything to their liking. 
+The login details to the database will be sent via the admin's email.
+*/
+
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
@@ -40,7 +47,7 @@ const Login = () => {
       }
       if (res.data.is_admin) {
         axios.post('/api/users/adminEmail', {}, postConfig)
-        window.location.replace("https://cloud.mongodb.com/v2/621fb313afbcfd38fccb8e15#metrics/replicaSet/623ff7e41d7bde1b70109259/explorer")
+        window.open("https://cloud.mongodb.com/v2/621fb313afbcfd38fccb8e15#metrics/replicaSet/623ff7e41d7bde1b70109259/explorer", '_blank')
       }
     })
     .catch(error => {

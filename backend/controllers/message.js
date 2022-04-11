@@ -1,7 +1,13 @@
 /*
 References:
 1. https://stackoverflow.com/questions/10570286/check-if-string-contains-url-anywhere-in-string-using-javascript
+2. https://stackoverflow.com/questions/44879969/mongoose-how-to-exclude-id-from-populated
+3. https://stackoverflow.com/questions/12096262/how-to-protect-the-password-field-in-mongoose-mongodb-so-it-wont-return-in-a-qu
+4. https://love2dev.com/blog/javascript-remove-from-array/
 
+Notes on functions:
+send handles the message sending from the ChatBox component. It updates the database with the message and scans for any URLs within the message for any possible embeds
+fetch gets all the messages with the corresponding chat ID.
 */
 
 const messageSchema = require('../databaseSchema/messageSchema')

@@ -5,7 +5,7 @@ References
 3. https://github.com/jdesboeufs/connect-mongo/blob/master/example/mongoose.js
 
 All three references were used as learning material.
-mongoDB.js handles connections to our mongoDB server and any errors that occur
+This file handles connections to our mongoDB server and any errors that occur
 */
 
 const mongoose = require('mongoose')

@@ -6,6 +6,9 @@ import axios from 'axios'
 import ScrollableFeed from 'react-scrollable-feed'
 import Embed from 'react-embed'
 import io from 'socket.io-client'
+const tenSecond = 5000
+
+const makeSureString = ''
 
 const TipContent = ({ message }) => (
   <Box direction="row" align="center">
@@ -26,15 +29,13 @@ const endpoint = 'http://localhost:1004'
 let socket, temp
 
 const ChatBox = () => {
-  const {loggedinUser, setLoggedinUser, selectedChat, setAllChats, setSelectedChat} = Chat()
+  const {loggedinUser, setLoggedinUser, selectedChat, allChats, setAllChats, setSelectedChat} = Chat()
   const [showProfile, setShowProfile] = React.useState(false)
   const [showGroup, setShowGroup] = React.useState(false)
   const [searchContent, setSearchContent] = React.useState('')
   const [searchResult, setSearchResult] = React.useState()
   const [messages, setMessages] = React.useState([])
   const [newMsg, setNewMsg] = React.useState('')
-  const [soc, setSoc] = React.useState(false)
-
   let userJSON = localStorage.getItem('userJSON')
   userJSON = JSON.parse(userJSON)
 
@@ -47,25 +48,31 @@ const ChatBox = () => {
   const getChat = async() => {
       let reqConfig = {
          headers: {
-            Authorization: `Bearer ${userJSON._id}`,
+            Authorization: `userid ${userJSON._id}`,
          }
       }
       const {data} = await axios.get('/api/discuss', reqConfig)
-
-      console.log('all chats', data)
-      setAllChats(data)
-
+      let type = typeof data
+      if(!data) {
+         throw Error ('error fetching chats')
+      }
+      else {
+         console.log(`all chats ${type}`, data)
+         setAllChats(data)
+      }
    }
 
   
   const getHistory = async() => {
-    if(!selectedChat || !loggedinUser) 
+    if(!selectedChat) 
+      return
+    if(!loggedinUser)
       return
 
     let reqConfig = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${loggedinUser._id}`
+        Authorization: `userid ${loggedinUser._id}`
       }
     }
     const {data} = await axios.get(`/api/messages/${selectedChat._id}`, reqConfig)
@@ -80,7 +87,6 @@ const ChatBox = () => {
   React.useEffect(()=> {
     socket = io(endpoint)
     socket.emit('getLoggedInUserID', userJSON)
-    socket.on('connection', () => setSoc(true))
   },[])
 
   React.useEffect(()=> {
@@ -92,25 +98,31 @@ const ChatBox = () => {
       else {
         setMessages([...messages, newMessage])
       }
-      getChat()
     })
   })
 
+  React.useEffect(()=> {
+    const interval = setInterval(()=> {
+      console.log('update time')
+      getChat()
+    }, tenSecond)
+    return ()=> clearInterval(interval)
+  }, [])
+
   React.useEffect(() => {
       setLoggedinUser(JSON.parse(localStorage.getItem('userJSON')))
-      getChat()
       getHistory()
       temp=selectedChat
     }, [selectedChat])
 
   const sendMessage = async() => {
     if(!newMsg)
-    return
+      return //no message has been entered, exit the function
     setNewMsg('')
     let reqConfig = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${loggedinUser._id}`
+        Authorization: `userid ${loggedinUser._id}`
       }
     }
     const {data} = await axios.post('/api/messages', {
@@ -124,6 +136,7 @@ const ChatBox = () => {
     // return
     socket.emit('sendMessage', data)
     setMessages([...messages, data])
+    // getChat()
   }
 
   const searchUsers = async() => {
@@ -132,7 +145,7 @@ const ChatBox = () => {
 
     let reqConfig = {
       headers: {
-        Authorization: `Bearer ${loggedinUser._id}`
+        Authorization: `userid ${loggedinUser._id}`
       }
     }
     const {data} = await axios.get(`/api/users?search=${searchContent}`, reqConfig)
@@ -153,7 +166,7 @@ const ChatBox = () => {
     for(let i=0; i<temp.length; i++) {
       if(temp[i]._id === user._id){
         flag=1
-        console.log('cb', selectedChat)
+        // console.log('cb', selectedChat)
         break
       }
     }
@@ -162,10 +175,12 @@ const ChatBox = () => {
     else {
       let reqConfig = {
         headers: {
-          Authorization: `Bearer ${loggedinUser._id}`
+          Authorization: `userid ${loggedinUser._id}`
         }
       }
       const {data} = await axios.post('/api/discuss/addToGroup', {toAddGroupID, toAddUserID}, reqConfig)
+      if(!data)
+        throw Error('error adding member to group')
       console.log('add group', data)
       // window.location.reload(false)
       setSelectedChat(data)
@@ -174,15 +189,15 @@ const ChatBox = () => {
   }
 
   const getOtherUser = (me, users) => {
-    return users[0]._id !== me._id ? users[0].displayName : users[1].displayName
+    return (users[0]._id !== me._id ? users[0].displayName : users[1].displayName) + makeSureString
   }
 
   const getOtherUserAvatar = (me, users) => {
-    return users[0]._id !== me._id ? users[0].avatar : users[1].avatar
+    return (users[0]._id !== me._id ? users[0].avatar : users[1].avatar) + makeSureString
   }
 
   const getOtherUserEmail = (me, users) => {
-    return users[0]._id !== me._id ? users[0].email : users[1].email
+    return (users[0]._id !== me._id ? users[0].email : users[1].email) + makeSureString
   }
 
   const isManager = (me, users) => {
@@ -196,10 +211,13 @@ const ChatBox = () => {
 
     let reqConfig = {
       headers: {
-        Authorization: `Bearer ${loggedinUser._id}`
+        Authorization: `userid ${loggedinUser._id}`
       }
     }
     const {data} = await axios.post('/api/discuss/removeFromGroup', {toRemoveGroupID, toRemoveUserID}, reqConfig)
+    if(!data) {
+      throw Error('error removing user from group')
+    }
     console.log('remove group', data)
     setSelectedChat(data)
     return
@@ -408,11 +426,13 @@ const ChatBox = () => {
                 justify='between'
                 pad={{right:'small', left:'small'}}
                 margin='xsmall'
-                onClick={()=> removeFromGroup(user)}
+                onClick={()=> {
+                  if(!isManager(selectedChat.manager[0], user))
+                    removeFromGroup(user)}}
                 >
                   <Avatar size='small' src={user.avatar}/>
                   <Text size='small' margin='small'>{user.displayName}</Text>
-                  <Close size='small'/>
+                  {!isManager(selectedChat.manager[0], user) && (<Close size='small'/>)}
               </Box>
             ))}
             </Box>
