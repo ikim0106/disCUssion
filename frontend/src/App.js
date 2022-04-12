@@ -2,6 +2,7 @@
 import './App.css';
 import {Route} from 'react-router-dom'
 import LandingPage from './Pages/LandingPage'
+import Admin from './Pages/Admin'
 import Discuss from './Pages/Discuss';
 import { Grommet } from 'grommet'
 
@@ -23,6 +24,7 @@ function App() {
     <Grommet theme={theme}>
       <Route exact path = '/' component={LandingPage}/>
       <Route path = '/discuss' component={Discuss}/>
+      <Route path = '/admin' component={Admin}/>
     </Grommet>
   );
 }
