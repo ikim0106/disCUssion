@@ -66,28 +66,6 @@ const AdminPage = () => {
       setLoggedinUser(temp)
       getAllUsers()
    }, [])
-   
-
-   const clickedUser = async(otherUserId) => {
-      // console.log('clicked user', otherUserId)
-      setSearchLabel(false)
-      let reqConfig = {
-         headers: {
-            "Content-type": "application/json",
-            Authorization: `userid ${userJSON._id}`,
-         }
-      }
-      const {data} = await axios.post('/api/discuss', {otherUserId}, reqConfig)
-      // if(!allChats.find((e) => e._id===data._id)) setAllChats([data, ...allChats])
-      if(!data) {
-         // console.log('err lmao')
-         throw Error('error fetching chat')
-      }
-      // setChat(data)
-      localStorage.setItem('currentChat', JSON.stringify(data[0]))
-      // console.log('returned chat', data)
-      setSelectedChat(data[0] || data)
-   }
 
    const searchUsers = async() => {
       if(!searchContent) {
@@ -322,12 +300,21 @@ const AdminPage = () => {
                      />
 
                   </Box>
-                  {(
-                     searchResult?.map(user=> (
-                        <Box 
+               <Box 
+                  style = {{
+                     position:'absolute',
+                     zIndex: '0'
+                  }}
+                  height='60vh' 
+                  margin={{top:'10vh'}}
+                  overflow='overlay'>  
+                     <InfiniteScroll items={searchResult}>
+                        {((user) =>
+                           <Box 
                            direction='row'
                            border={{color: '#b19cd9', size:'small'}} 
                            height='7vh'
+                           flex={false}
                            pad='small'
                            round='small'
                            width='30vw'
@@ -337,15 +324,16 @@ const AdminPage = () => {
                            onClick={() => walao(user)}
                            background='#ffffed'
                            hoverIndicator={{color:'#f0f0f0'}}
-                        >
+                           >
                            <Avatar src={user.avatar}/>
                            <Box direction='column' margin='small'>
                               <Text weight='bold'>{user.displayName}</Text>
                               <Text size='small'>Email: {user.email}</Text>
                            </Box>
                         </Box>
-                     ))
-                  )}
+                        )}
+                     </InfiniteScroll>
+                  </Box>
                </Box>
          </Layer>
       )}

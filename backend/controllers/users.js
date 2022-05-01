@@ -242,4 +242,24 @@ const changePassword = asyncHandler(async(req,res)=> {
    return res
 })
 
-module.exports = { loginAdmin, loginUser, signupUser, sendVerificationCode, searchUser, changePassword, sendEmailAdmin }
+const changeAvatar = asyncHandler(async(req,res) => {
+   let {id, avatarURL} = req.body
+
+   let toEditUser = await userSchema.findOne({
+      _id: id
+   })
+
+   if(!toEditUser) { 
+      res.status(400)
+      res.send('invalid user')
+      return res
+   }
+
+   toEditUser.avatar = avatarURL
+   await toEditUser.save()
+   res.status(200)
+   res.send(toEditUser)
+   return res
+})
+
+module.exports = { loginAdmin, loginUser, signupUser, sendVerificationCode, searchUser, changePassword, sendEmailAdmin, changeAvatar }

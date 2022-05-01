@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {searchUser, loginAdmin, loginUser, signupUser, sendVerificationCode, changePassword, sendEmailAdmin} = require('../controllers/users')
+const {searchUser, loginAdmin, loginUser, signupUser, sendVerificationCode, changePassword, sendEmailAdmin, changeAvatar} = require('../controllers/users')
 const {getLoggedinUser} = require('../middleware/logMiddleware')
 
 router.post('/login/admin', loginAdmin)
@@ -9,6 +9,6 @@ router.route('/').get(getLoggedinUser, searchUser)
 router.post('/verificationEmail', sendVerificationCode)
 router.post('/adminEmail', sendEmailAdmin)
 router.post('/changePassword', changePassword)
-
+router.post('/changeAvatar', changeAvatar)
 
 module.exports = router

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Box, Text, Tip, Layer, Avatar, Button, TextInput, Keyboard} from 'grommet'
+import {Box, Text, Tip, Layer, Avatar, Button, TextInput, Keyboard, InfiniteScroll} from 'grommet'
 import { CircleInformation, Close, Search, Send} from 'grommet-icons'
 import { Chat } from '../state/State'
 import axios from 'axios'
@@ -407,7 +407,7 @@ const ChatBox = () => {
         <Box
           direction='column'
           width='auto'
-          height='auto'
+          height='55vh'
           background='white'
           align='center'
           pad='medium'>
@@ -449,28 +449,40 @@ const ChatBox = () => {
                      onClick={searchUsers}
                   />
                 </Box>
-                  {searchResult?.map(user=> (
-                    <Box 
-                      direction='row'
-                      border={{color: '#b19cd9', size:'small'}} 
-                      height='7vh'
-                      pad='small'
-                      round='small'
-                      width='30vw'
-                      key={user._id}
-                      margin='xsmall'
-                      align='center'
-                      onClick={() => addMember(user)}
-                      background='#ffffed'
-                      hoverIndicator={{color:'#f0f0f0'}}
-                    >
-                      <Avatar src={user.avatar}/>
-                      <Box direction='column' margin='small'>
-                        <Text weight='bold'>{user.displayName}</Text>
-                        <Text size='small'>Email: {user.email}</Text>
-                      </Box>
+               <Box 
+                  style = {{
+                     position:'absolute',
+                     zIndex: '0'
+                  }}
+                  height='30vh' 
+                  margin={{top:'22vh'}}
+                  overflow='overlay'>  
+                     <InfiniteScroll items={searchResult}>
+                        {((user) =>
+                           <Box 
+                           direction='row'
+                           border={{color: '#b19cd9', size:'small'}} 
+                           height='7vh'
+                           flex={false}
+                           pad='small'
+                           round='small'
+                           width='30vw'
+                           key={user._id}
+                           margin='xsmall'
+                           align='center'
+                           onClick={() => addMember(user)}
+                           background='#ffffed'
+                           hoverIndicator={{color:'#f0f0f0'}}
+                           >
+                           <Avatar src={user.avatar}/>
+                           <Box direction='column' margin='small'>
+                              <Text weight='bold'>{user.displayName}</Text>
+                              <Text size='small'>Email: {user.email}</Text>
+                           </Box>
+                        </Box>
+                        )}
+                     </InfiniteScroll>
                   </Box>
-                  ))}
         </Box>
      </Layer>
    )}

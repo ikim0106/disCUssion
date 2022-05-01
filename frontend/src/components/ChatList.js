@@ -1,9 +1,12 @@
 import React from 'react'
-import {InfiniteScroll, Box, Avatar, Button, Accordion, AccordionPanel, Layer, Text, TextInput, Notification, Tip} from 'grommet'
+import {FileInput, InfiniteScroll, Box, Avatar, Button, Accordion, AccordionPanel, Layer, Text, TextInput, Notification, Tip} from 'grommet'
 import { Add, Search, Edit, Close} from 'grommet-icons'
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
 import {Chat} from '../state/State'
+const konfig = require('../cloudinaryURL.json')
+
+let cloudinary = konfig.cloudinaryURL //some json string issue
 
 const TipContent = ({ message }) => (
   <Box direction="row" align="center">
@@ -21,6 +24,13 @@ const TipContent = ({ message }) => (
 )
 
 const ChatList = () => {
+
+   const hiddenFileInput = React.useRef(null);
+   const handleAvatarClick = (event) => {
+      console.log('wtf', loggedinUser.avatar)
+      hiddenFileInput.current.click()
+   }
+
    const {loggedinUser, setLoggedinUser, allChats, setAllChats, setSelectedChat} = Chat()
    const history = useHistory()
    const [noSearch, setNoSearch] = React.useState(false)
@@ -37,6 +47,7 @@ const ChatList = () => {
    const [tagToast, setTagToast] = React.useState(false)
    const [memberToast, setmMemberToast] = React.useState(false)
    const [pwToast, setPwToast] = React.useState(false)
+   const [avatar, setAvatar] = React.useState('')
 
    let userJSON = localStorage.getItem('userJSON')
    userJSON = JSON.parse(userJSON)
@@ -78,6 +89,43 @@ const ChatList = () => {
          return
       setTags(tags.filter((elem) => elem._id !== user._id))
       // console.log('remove user', user)
+   }
+
+   const changeAvatar = async(avatar)=> {
+    if(avatar.type==='image/jpeg' || avatar.type==='image/png') {
+      let imgData = new FormData()
+      imgData.append('file', avatar)
+      imgData.append('upload_preset', 'disCUssion')
+      imgData.append('cloud_name', 'discussion')
+      // console.log('imgData', imgData)
+      let cloudinaryParams = {
+        method:'post',
+        body: imgData
+      }
+      // console.log('cloudinaryURL', cloudinary)
+      fetch(cloudinary, cloudinaryParams)
+        .then((response)=> response.json())
+        .then(data => {
+           changeState(data.url)
+         })
+         .catch((err) => {console.log(err)})
+      
+    }
+    else return
+   }
+
+   const changeState = async(avatarURL)=> {
+      let id = loggedinUser._id
+      const postConfig = {
+         headers: {"Content-type" : "application/json"}
+      }
+      let {data} = await axios.post('/api/users/changeAvatar', {id, avatarURL}, postConfig)
+      if(!data) {
+         throw Error('upload avatar failed')
+      }
+      userJSON.avatar = avatarURL
+      localStorage.setItem('userJSON', JSON.stringify(userJSON))
+      window.location.reload()
    }
 
    const addMember = async(user)=> {
@@ -311,8 +359,8 @@ const ChatList = () => {
       </Box>
 
       { showProfile && <Layer
-         onEsc={()=> setShowProfile(false)}
-         onClickOutside={()=> setShowProfile(false)}
+         onEsc={()=> {setShowProfile(false); setSearchContent(''); setSearchResult([])}}
+         onClickOutside={()=> {setShowProfile(false); setSearchContent(''); setSearchResult([])}}
       >
          <Box
             direction='column'
@@ -322,7 +370,16 @@ const ChatList = () => {
             pad='medium'
          >
          <Text size='3xl' margin='small'>{userJSON.displayName}</Text>
-         <Avatar size='3xl' src={userJSON.avatar}/>
+         <Avatar size='3xl' src={userJSON.avatar} onClick={()=> handleAvatarClick()}/>
+         <Box style={{display:'none'}}>
+            <FileInput
+            name='file'
+            ref={hiddenFileInput}
+            accept='image/*'
+            onChange={(event)=> changeAvatar(event.target.files[0])}
+            />
+          </Box>
+         <Text size='small'>Click to upload a new avatar</Text>
          <Text size='xlarge' margin='large'>Email: {userJSON.email}</Text>
          <Box direction='row'>  
             <TextInput
@@ -344,10 +401,10 @@ const ChatList = () => {
       }
       {groupLayer && (
          <Layer
-            onEsc={()=> setGroupLayer(false)}
-            onClickOutside={()=> setGroupLayer(false)}
+            onEsc={()=> {setGroupLayer(false); setSearchContent(''); setSearchResult([]); setTags([])}}
+            onClickOutside={()=> {setGroupLayer(false); setSearchContent(''); setSearchResult([]); setTags([])}}
          >
-            <Box align='center' height='80vh' pad='small'>
+            <Box align='center' height='70vh' pad='small'>
                <Text size='large'>New group</Text>
                <Box direction='row' width='30vw' margin='small' >    
                   <TextInput
@@ -390,12 +447,21 @@ const ChatList = () => {
                   </Box>
                ))}
                </Box>
-                  {(
-                     searchResult?.map(user=> (
-                        <Box 
+               <Box 
+                  style = {{
+                     position:'absolute',
+                     zIndex: '0'
+                  }}
+                  height='43vh' 
+                  margin={{top:'24vh'}}
+                  overflow='overlay'>  
+                     <InfiniteScroll items={searchResult}>
+                        {((user) =>
+                           <Box 
                            direction='row'
                            border={{color: '#b19cd9', size:'small'}} 
                            height='7vh'
+                           flex={false}
                            pad='small'
                            round='small'
                            width='30vw'
@@ -405,15 +471,16 @@ const ChatList = () => {
                            onClick={() => addMember(user)}
                            background='#ffffed'
                            hoverIndicator={{color:'#f0f0f0'}}
-                        >
+                           >
                            <Avatar src={user.avatar}/>
                            <Box direction='column' margin='small'>
                               <Text weight='bold'>{user.displayName}</Text>
                               <Text size='small'>Email: {user.email}</Text>
                            </Box>
                         </Box>
-                     ))
-                  )}
+                        )}
+                     </InfiniteScroll>
+                  </Box>
             </Box>
             <Box pad='small'>
                <Button primary label='Create group'
@@ -424,8 +491,8 @@ const ChatList = () => {
       )}
       {searchLabel && (
          <Layer
-            onEsc={()=> setSearchLabel(false)}
-            onClickOutside={()=> setSearchLabel(false)}
+            onEsc={()=> {setSearchLabel(false); setSearchContent(''); setSearchResult([])}}
+            onClickOutside={()=> {setSearchLabel(false); setSearchContent(''); setSearchResult([])}}
             >
                <Box height='80vh' width='40vw' direction='column' align='center' pad='medium'>
                   <Text size='large'>Search users</Text>

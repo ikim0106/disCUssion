@@ -8,12 +8,13 @@ import {useHistory} from 'react-router-dom'
 const Admin = () => {
    const history = useHistory()
    let userJSON = localStorage.getItem('userJSON')
-   if(userJSON===null || userJSON==='null'){
-      history.push('/')
+   userJSON = JSON.parse(userJSON)
+   console.log('userJSON', userJSON.is_admin)
+   // return
+   if(userJSON===null || userJSON==='null' || userJSON.is_admin!==true){
+      history.push('/discuss')
       return null
    }
-   userJSON = JSON.parse(userJSON)
-   // console.log('jibai knn', userJSON)
    return (
    <div style={{width: '100%'}}>
       <Box

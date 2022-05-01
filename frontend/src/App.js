@@ -2,8 +2,8 @@
 import './App.css';
 import {Route} from 'react-router-dom'
 import LandingPage from './Pages/LandingPage'
-import Admin from './Pages/Admin'
 import Discuss from './Pages/Discuss';
+import Admin from './Pages/Admin'
 import { Grommet } from 'grommet'
 
 const theme = {
