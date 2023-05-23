@@ -10,9 +10,9 @@ send handles the message sending from the ChatBox component. It updates the data
 fetch gets all the messages with the corresponding chat ID.
 */
 
-const messageSchema = require('../databaseSchema/messageSchema')
-const userSchema = require('../databaseSchema/userSchema')
-const chatSchema = require('../databaseSchema/chatSchema')
+const messageSchema = require('../DatabaseSchema/messageSchema')
+const userSchema = require('../DatabaseSchema/userSchema')
+const chatSchema = require('../DatabaseSchema/chatSchema')
 const asyncHandler = require('express-async-handler')
 
 const send = asyncHandler(async(req, res)=> {

@@ -1,4 +1,4 @@
-const userSchema = require('../databaseSchema/userSchema')
+const userSchema = require('../DatabaseSchema/userSchema')
 const ObjectId = require('mongoose').Types.ObjectId
 const asyncHandler = require('express-async-handler')
 

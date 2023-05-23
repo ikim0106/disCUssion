@@ -9,9 +9,9 @@ All of these resources have been used as learning material.
 All of the routes in this file contain lines of code that may look very similar to the ones in the references, but almost none were directly copied.
 */
 
-const chatSchema = require('../databaseSchema/chatSchema')
-const userSchema = require('../databaseSchema/userSchema')
-const messageSchema = require('../databaseSchema/messageSchema')
+const chatSchema = require('../DatabaseSchema/chatSchema')
+const userSchema = require('../DatabaseSchema/userSchema')
+const messageSchema = require('../DatabaseSchema/messageSchema')
 const asyncHandler = require('express-async-handler')
 const router = require('express').Router()
 const {getLoggedinUser} = require('../middleware/logMiddleware')
