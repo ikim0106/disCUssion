@@ -4,9 +4,9 @@ import { Add, Search, Edit, Close} from 'grommet-icons'
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
 import {Chat} from '../state/State'
-const konfig = require('../cloudinaryURL.json')
+// const konfig = require('../cloudinaryURL.json')
 
-let cloudinary = konfig.cloudinaryURL //some json string issue
+let cloudinary = process.env.REACT_APP_CLOUDINARYURL //some json string issue
 
 const TipContent = ({ message }) => (
   <Box direction="row" align="center">

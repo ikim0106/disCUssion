@@ -9,8 +9,8 @@ This file handles connections to our mongoDB server and any errors that occur
 */
 
 const mongoose = require('mongoose')
-const config = require('../../config.json')
-const mongoURI = config.mongoURI
+// const config = require('../../config.json')
+const mongoURI = process.env.mongoURI
 
 const connectToMongoDB = async () => {
    // console.log('mongoURI', mongoURI)

@@ -21,7 +21,7 @@ import { CloudUpload, Send, Validate } from 'grommet-icons'
 import { useHistory } from 'react-router-dom'
 const konfig = require('../cloudinaryURL.json') //spelled differently to avoid future clashes
 
-let cloudinary = konfig.cloudinaryURL //some json string issue
+let cloudinary = process.env.REACT_APP_CLOUDINARYURL //some json string issue
 
 const Signup = () => {
   let history = useHistory()
