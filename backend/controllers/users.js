@@ -27,6 +27,8 @@ const asyncHandler = require('express-async-handler')
 const konfig = require('../../config.json')
 const nodemailer = require('nodemailer')
 
+console.log(process.env)
+
 const transporter = nodemailer.createTransport({
    service: 'gmail',
    auth: {

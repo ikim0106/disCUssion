@@ -25,7 +25,7 @@ const TipContent = ({ message }) => (
   </Box>
 )
 
-const endpoint = 'https://discussioncuhk.herokuapp.com/'
+const endpoint = 'http://localhost:1004'
 let socket, temp
 
 const ChatBox = () => {

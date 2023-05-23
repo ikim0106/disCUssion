@@ -13,12 +13,15 @@ The logics of real time messages were directly copied from resource 6 and 7 (too
 server.js handles the backend server using express and its routes.
 */
 
+require('dotenv').config()
+// console.log(process.env)
+
 const express = require('express')
 // const { append } = require('express/lib/response')
-const config = require('../config.json')
+// const config = require('../config.json')
 const connectToMongoDB = require('./mongo/mongoDB')
 const {infamous404, errorHandler} = require('./controllers/handleErrors')
-const PORT = parseInt(config.port) || 3004 //default to 3004
+const PORT = parseInt(process.env.REACT_APP_PORT) || 3004 //default to 3004
 const userRouter = require('./routes/userRouter')
 const chatRouter = require('./routes/chatRouter')
 const msgRouter = require('./routes/messageRouter')
