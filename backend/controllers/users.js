@@ -23,7 +23,7 @@ signupUser handles the signing up for a user.
 changePassword handles changing password from the user profile.
 */
 
-const userSchema = require('../databaseSchema/userSchema')
+const userSchema = require('../DatabaseSchema/userSchema')
 const asyncHandler = require('express-async-handler')
 // const konfig = require('../../config.json')
 const nodemailer = require('nodemailer')
