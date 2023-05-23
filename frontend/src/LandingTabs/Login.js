@@ -64,7 +64,7 @@ const Login = () => {
         return
       }
     // console.log('pepelaf', pepelaf)
-    // history.push('/discuss')
+    history.push('/discuss')
     // localStorage.setItem('userJSON', JSON.stringify(loginJSON))
   }
 
