@@ -32,9 +32,9 @@ serber.use(express.json()) //let express use JSON formatted data
 
 connectToMongoDB()
 
-serber.use('/api/users', userRouter)
-serber.use('/api/discuss', chatRouter)
-serber.use('/api/messages', msgRouter)
+serber.use('https://discussion-backend.onrender.com/api/users', userRouter)
+serber.use('https://discussion-backend.onrender.com/api/discuss', chatRouter)
+serber.use('https://discussion-backend.onrender.com/api/messages', msgRouter)
 
 //-------------------------DEPLOY-----------------------
 
@@ -49,7 +49,7 @@ const server = serber.listen(PORT, console.log(`backend started, listening on po
 const soket = socket(server, {
    pingTimeout: 100000, //gives users 100 seconds of inactivity, or else the socket will be closed
    cors: {
-      origin: 'http://localhost:3000',
+      origin: 'https://discussion-frontend.onrender.com:3000',
    }
 })
 

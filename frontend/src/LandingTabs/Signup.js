@@ -78,7 +78,7 @@ const Signup = () => {
       //    email,
       //    rando
       //  })
-       await axios.post('/api/users/verificationEmail', {
+       await axios.post('https://discussion-backend.onrender.com/api/users/verificationEmail', {
          email,
          rando
        }, config)
@@ -127,7 +127,7 @@ const Signup = () => {
     }
 
     await axios
-    .post('/api/users/signup', {displayName, is_admin, email, pw, verified, avatar}, postConfig)
+    .post('https://discussion-backend.onrender.com/api/users/signup', {displayName, is_admin, email, pw, verified, avatar}, postConfig)
     .then(res => {
       // console.log('pog new user', res) //debug
       // console.log('cmon man', res.data)

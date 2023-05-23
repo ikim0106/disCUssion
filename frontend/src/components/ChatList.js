@@ -69,7 +69,7 @@ const ChatList = () => {
       }
       // console.log('tags', tags)
       let stuff = JSON.stringify(tags.map((user)=>user._id))
-      const {data} = await axios.post('/api/discuss/makeGroup', {
+      const {data} = await axios.post('https://discussion-backend.onrender.com/api/discuss/makeGroup', {
          name: groupName,
          loggedinUser: loggedinUser,
          users: stuff
@@ -119,7 +119,7 @@ const ChatList = () => {
       const postConfig = {
          headers: {"Content-type" : "application/json"}
       }
-      let {data} = await axios.post('/api/users/changeAvatar', {id, avatarURL}, postConfig)
+      let {data} = await axios.post('https://discussion-backend.onrender.com/api/users/changeAvatar', {id, avatarURL}, postConfig)
       if(!data) {
          throw Error('upload avatar failed')
       }
@@ -161,7 +161,7 @@ const ChatList = () => {
             Authorization: `userid ${userJSON._id}`,
          }
       }
-      const {data} = await axios.get('/api/discuss', reqConfig)
+      const {data} = await axios.get('https://discussion-backend.onrender.com/api/discuss', reqConfig)
       if(!data) {
          throw Error ('error fetching chats')
       }
@@ -187,7 +187,7 @@ const ChatList = () => {
             Authorization: `userid ${userJSON._id}`,
          }
       }
-      const {data} = await axios.post('/api/discuss', {otherUserId}, reqConfig)
+      const {data} = await axios.post('https://discussion-backend.onrender.com/api/discuss', {otherUserId}, reqConfig)
       // if(!allChats.find((e) => e._id===data._id)) setAllChats([data, ...allChats])
       if(!data) {
          // console.log('err lmao')
@@ -212,7 +212,7 @@ const ChatList = () => {
       }
       // console.log('wtf', reqConfig.headers.Authorization)
 
-      const {data} = await axios.get(`/api/users?search=${searchContent}`, reqConfig)
+      const {data} = await axios.get(`https://discussion-backend.onrender.com/api/users?search=${searchContent}`, reqConfig)
       if(!data) {
          throw Error('something went wrong')
       }
@@ -239,7 +239,7 @@ const ChatList = () => {
          return
       }
 
-      await axios.post('/api/users/changePassword', {id, newPassword}, postConfig)
+      await axios.post('https://discussion-backend.onrender.com/api/users/changePassword', {id, newPassword}, postConfig)
       setPwToast(true)
    }
    
