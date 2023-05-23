@@ -22,19 +22,16 @@ loginUser handles the logging in for a user.
 signupUser handles the signing up for a user.
 changePassword handles changing password from the user profile.
 */
-
-const userSchema = require('../DatabaseSchema/userSchema')
+const userSchema = require('../databaseSchema/userSchema')
 const asyncHandler = require('express-async-handler')
-// const konfig = require('../../config.json')
+const konfig = require('../../config.json')
 const nodemailer = require('nodemailer')
-
-console.log(process.env)
 
 const transporter = nodemailer.createTransport({
    service: 'gmail',
    auth: {
-      user: process.env.nodemailerEmail,
-      pass: process.env.nodemailerPW
+      user: konfig.nodemailerEmail,
+      pass: konfig.nodemailerPW
    }
 })
 
@@ -73,11 +70,11 @@ const sendEmailAdmin = asyncHandler(async(req, res) => {
    
    const mailOptions = {
       from: 'disCUssion',
-      to: process.env.mongoEmail,
+      to: konfig.mongoEmail,
       subject: 'disCUssion admin login',
       html: `The details to the admin interface are
-      Email: ${process.env.mongoEmail}
-      Password: ${process.env.mongoPw}`,
+      Email: ${konfig.mongoEmail}
+      Password: ${konfig.mongoPw}`,
    }
 
    transporter.sendMail(mailOptions, (err, msg) => {

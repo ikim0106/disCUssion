@@ -13,15 +13,12 @@ The logics of real time messages were directly copied from resource 6 and 7 (too
 server.js handles the backend server using express and its routes.
 */
 
-require('dotenv').config()
-// console.log(process.env)
-
 const express = require('express')
 // const { append } = require('express/lib/response')
-// const config = require('../config.json')
+const config = require('../config.json')
 const connectToMongoDB = require('./mongo/mongoDB')
 const {infamous404, errorHandler} = require('./controllers/handleErrors')
-const PORT = parseInt(process.env.REACT_APP_PORT) || 3004 //default to 3004
+const PORT = parseInt(config.port) || 3004 //default to 3004
 const userRouter = require('./routes/userRouter')
 const chatRouter = require('./routes/chatRouter')
 const msgRouter = require('./routes/messageRouter')
@@ -32,9 +29,9 @@ serber.use(express.json()) //let express use JSON formatted data
 
 connectToMongoDB()
 
-serber.use('https://discussion-backend.onrender.com/api/users', userRouter)
-serber.use('https://discussion-backend.onrender.com/api/discuss', chatRouter)
-serber.use('https://discussion-backend.onrender.com/api/messages', msgRouter)
+serber.use('/api/users', userRouter)
+serber.use('/api/discuss', chatRouter)
+serber.use('/api/messages', msgRouter)
 
 //-------------------------DEPLOY-----------------------
 
@@ -49,7 +46,7 @@ const server = serber.listen(PORT, console.log(`backend started, listening on po
 const soket = socket(server, {
    pingTimeout: 100000, //gives users 100 seconds of inactivity, or else the socket will be closed
    cors: {
-      origin: 'https://discussion-frontend.onrender.com:3000',
+      origin: 'http://localhost:3000',
    }
 })
 

@@ -19,9 +19,9 @@ import axios from 'axios'
 import {TextInput, Text, Box, Button, Notification, FileInput} from 'grommet'
 import { CloudUpload, Send, Validate } from 'grommet-icons'
 import { useHistory } from 'react-router-dom'
-// const konfig = require('../cloudinaryURL.json') //spelled differently to avoid future clashes
+const konfig = require('../cloudinaryURL.json') //spelled differently to avoid future clashes
 
-let cloudinary = process.env.REACT_APP_CLOUDINARYURL //some json string issue
+let cloudinary = konfig.cloudinaryURL //some json string issue
 
 const Signup = () => {
   let history = useHistory()
@@ -78,7 +78,7 @@ const Signup = () => {
       //    email,
       //    rando
       //  })
-       await axios.post('https://discussion-backend.onrender.com/api/users/verificationEmail', {
+       await axios.post('/api/users/verificationEmail', {
          email,
          rando
        }, config)
@@ -127,7 +127,7 @@ const Signup = () => {
     }
 
     await axios
-    .post('https://discussion-backend.onrender.com/api/users/signup', {displayName, is_admin, email, pw, verified, avatar}, postConfig)
+    .post('/api/users/signup', {displayName, is_admin, email, pw, verified, avatar}, postConfig)
     .then(res => {
       // console.log('pog new user', res) //debug
       // console.log('cmon man', res.data)

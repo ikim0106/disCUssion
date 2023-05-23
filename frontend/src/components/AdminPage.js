@@ -48,7 +48,7 @@ const AdminPage = () => {
       }
       // console.log('wtf', reqConfig.headers.Authorization)
 
-      const {data} = await axios.get(`https://discussion-backend.onrender.com/api/users?search=@`, reqConfig)
+      const {data} = await axios.get(`/api/users?search=@`, reqConfig)
       if(!data) {
          throw Error('something went wrong')
       }
@@ -79,7 +79,7 @@ const AdminPage = () => {
       }
       // console.log('wtf', reqConfig.headers.Authorization)
 
-      const {data} = await axios.get(`https://discussion-backend.onrender.com/api/users?search=${searchContent}`, reqConfig)
+      const {data} = await axios.get(`/api/users?search=${searchContent}`, reqConfig)
       if(!data) {
          throw Error('something went wrong')
       }
@@ -106,7 +106,7 @@ const AdminPage = () => {
          return
       }
 
-      await axios.post('https://discussion-backend.onrender.com/api/users/changePassword', {id, newPassword}, postConfig)
+      await axios.post('/api/users/changePassword', {id, newPassword}, postConfig)
       setPwToast(true)
       setNewPw('')
    }

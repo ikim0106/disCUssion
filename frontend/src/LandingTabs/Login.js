@@ -36,7 +36,7 @@ const Login = () => {
 
     let pepelaf
     await axios
-    .post('https://discussion-backend.onrender.com/api/users/login', {email, pw}, postConfig)
+    .post('/api/users/login', {email, pw}, postConfig)
     .then(res => {
       // console.log('pog logged in', res) //debug
       // console.log('cmon man', res.data)
@@ -59,12 +59,12 @@ const Login = () => {
     if (pepelaf.is_admin) {
         history.push('/admin')
         console.log('history push admin')
-        axios.post('https://discussion-backend.onrender.com/api/users/adminEmail', {}, postConfig)
+        axios.post('/api/users/adminEmail', {}, postConfig)
         window.open("https://cloud.mongodb.com/v2/621fb313afbcfd38fccb8e15#metrics/replicaSet/623ff7e41d7bde1b70109259/explorer", '_blank')
         return
       }
     // console.log('pepelaf', pepelaf)
-    history.push('/discuss')
+    // history.push('/discuss')
     // localStorage.setItem('userJSON', JSON.stringify(loginJSON))
   }
 

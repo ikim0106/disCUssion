@@ -25,7 +25,7 @@ const TipContent = ({ message }) => (
   </Box>
 )
 
-const endpoint = 'https://discussion-frontend.onrender.com'
+const endpoint = 'https://discussioncuhk.herokuapp.com/'
 let socket, temp
 
 const ChatBox = () => {
@@ -51,7 +51,7 @@ const ChatBox = () => {
             Authorization: `userid ${userJSON._id}`,
          }
       }
-      const {data} = await axios.get('https://discussion-backend.onrender.com/api/discuss', reqConfig)
+      const {data} = await axios.get('/api/discuss', reqConfig)
       // let type = typeof data
       if(!data) {
          throw Error ('error fetching chats')
@@ -75,7 +75,7 @@ const ChatBox = () => {
         Authorization: `userid ${loggedinUser._id}`
       }
     }
-    const {data} = await axios.get(`https://discussion-backend.onrender.com/api/messages/${selectedChat._id}`, reqConfig)
+    const {data} = await axios.get(`/api/messages/${selectedChat._id}`, reqConfig)
     if(!data) {
       throw Error('fetching history failed')
     }
@@ -125,7 +125,7 @@ const ChatBox = () => {
         Authorization: `userid ${loggedinUser._id}`
       }
     }
-    const {data} = await axios.post('https://discussion-backend.onrender.com/api/messages', {
+    const {data} = await axios.post('/api/messages', {
       msg: newMsg,
       id: selectedChat._id
     }, reqConfig)
@@ -148,7 +148,7 @@ const ChatBox = () => {
         Authorization: `userid ${loggedinUser._id}`
       }
     }
-    const {data} = await axios.get(`https://discussion-backend.onrender.com/api/users?search=${searchContent}`, reqConfig)
+    const {data} = await axios.get(`/api/users?search=${searchContent}`, reqConfig)
 
     if(!data) {
       throw Error('something went wrong')
@@ -178,7 +178,7 @@ const ChatBox = () => {
           Authorization: `userid ${loggedinUser._id}`
         }
       }
-      const {data} = await axios.post('https://discussion-backend.onrender.com/api/discuss/addToGroup', {toAddGroupID, toAddUserID}, reqConfig)
+      const {data} = await axios.post('/api/discuss/addToGroup', {toAddGroupID, toAddUserID}, reqConfig)
       if(!data)
         throw Error('error adding member to group')
       // console.log('add group', data)
@@ -214,7 +214,7 @@ const ChatBox = () => {
         Authorization: `userid ${loggedinUser._id}`
       }
     }
-    const {data} = await axios.post('https://discussion-backend.onrender.com/api/discuss/removeFromGroup', {toRemoveGroupID, toRemoveUserID}, reqConfig)
+    const {data} = await axios.post('/api/discuss/removeFromGroup', {toRemoveGroupID, toRemoveUserID}, reqConfig)
     if(!data) {
       throw Error('error removing user from group')
     }

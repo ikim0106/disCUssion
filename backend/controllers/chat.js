@@ -19,9 +19,9 @@ removeFromGroup removes a user from the group and updates the database according
 */
 
 const asyncHandler = require('express-async-handler')
-const chatSchema = require('../DatabaseSchema/chatSchema')
-const userSchema = require('../DatabaseSchema/userSchema')
-const messageSchema = require('../DatabaseSchema/messageSchema')
+const chatSchema = require('../databaseSchema/chatSchema')
+const userSchema = require('../databaseSchema/userSchema')
+const messageSchema = require('../databaseSchema/messageSchema')
 
 const discuss = asyncHandler(async(req, res) => {
    // console.log('req', req.body)

@@ -23,7 +23,7 @@ const ChatState = ({children}) => {
    React.useEffect(() => {
       let userJSON = localStorage.getItem('userJSON')
       if(userJSON !== 'undefined' && userJSON !== null) {
-         // console.log('userJSON', userJSON)
+         console.log('userJSON', userJSON)
          setLoggedinUser(JSON.parse(userJSON))
       }
       else {

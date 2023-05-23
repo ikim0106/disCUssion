@@ -9,13 +9,15 @@ This file handles connections to our mongoDB server and any errors that occur
 */
 
 const mongoose = require('mongoose')
-// const config = require('../../config.json')
-const mongoURI = process.env.mongoURI
+const config = require('../../config.json')
+const mongoURI = config.mongoURI
 
 const connectToMongoDB = async () => {
    // console.log('mongoURI', mongoURI)
-   mongoose.set('strictQuery', true)
-   const debug = await mongoose.connect(mongoURI)
+   const debug = await mongoose.connect(mongoURI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+   })
    const db = debug.connection
    db.on('error', ()=>{
       console.log('monkas mongo error')
